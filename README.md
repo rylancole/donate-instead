@@ -27,7 +27,7 @@ Note the `props.submission_id` in the `useEffect`, this is parsed from the url y
 
 You can find a submission id from a Reddit post's url e.g. .../r/HumansBeingBros/comments/**iavm5h**/bbc_crew_rescues_trapped_penguins/
 
-When you run `yarn start` the page will load at http://localhost:3000 and inform you of a _bad id_, just add some `/?id=` to the end and call an id from some Reddit post. 
+When you run `yarn start` the page will load at http://localhost:3000 and inform you of a _bad url_, just add some `/?id=` to the end and call an id from some Reddit post. Any bad url query or an invalid id has proper error handling.
 
 ## Example Ids 
 _all these ids are valid, feel free to use them_
