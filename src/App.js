@@ -34,11 +34,14 @@ function filterSubmission(sub) {
 }
 
 function EmbededPost(props) {
-  const [content, setContent] = React.useState({})
+  const [content, setContent] = React.useState({spinner: "Loading . . ."})
   useEffect(() => {
     r.getSubmission(props.submission_id).fetch()
     .then(submission => {
       setContent(filterSubmission(submission))
+    })
+    .catch(error => {
+      setContent({spinner: "Failed to fetch for id: "+props.submission_id})
     })
   }, [props.submission_id])
 
@@ -52,7 +55,7 @@ function EmbededPost(props) {
           <a href={content.url}>{content.title}</a> <br/>
           Value = {content.cost} coins
         </>
-        : "Loading . . ."
+        : content.spinner
       }
     </div>
   )
@@ -61,13 +64,12 @@ function EmbededPost(props) {
 function PageContent(props) {
   let location = useLocation()
   let urlQuery = /\?id=(\w+)/.exec(location.search)
-  console.log(urlQuery)
   return (
     <>
       {
         (urlQuery && urlQuery.length > 1)
         ? <EmbededPost submission_id={urlQuery[1]}/>
-        : "Bad id, try http://localhost:3000/?id=ibj74o"
+        : <>Bad url, try <a href="http://localhost:3000/?id=ibj74o">http://localhost:3000/?id=ibj74o</a></>
       }
     </>
     
