@@ -1,4 +1,9 @@
 import React, { useEffect } from 'react';
+import { 
+  BrowserRouter as Router,
+  Switch,
+  useLocation 
+} from "react-router-dom";
 import snoowrap from 'snoowrap';
 
 const r = new snoowrap({
@@ -29,32 +34,53 @@ function filterSubmission(sub) {
 }
 
 function EmbededPost(props) {
-  const { title, authorName, url, cost } = props
-  return (
-    <div>
-      /u/{authorName} <br/>
-      <a href={url}>{title}</a> <br/>
-      Value = {cost} coins
-    </div>
-  )
-}
-
-function App() {
   const [content, setContent] = React.useState({})
   useEffect(() => {
-    r.getSubmission('iavm5h').fetch()
+    r.getSubmission(props.submission_id).fetch()
     .then(submission => {
       setContent(filterSubmission(submission))
     })
-  })
+  }, [props.submission_id])
+
   return (
     <div>
       {
         (content.ready) 
-        ? <EmbededPost {...content}/>
-        : " Loading . . ." 
+        ? 
+        <>
+          /u/{content.authorName} <br/>
+          <a href={content.url}>{content.title}</a> <br/>
+          Value = {content.cost} coins
+        </>
+        : "Loading . . ."
       }
     </div>
+  )
+}
+
+function PageContent(props) {
+  let location = useLocation()
+  let urlQuery = /\?id=(\w+)/.exec(location.search)
+  console.log(urlQuery)
+  return (
+    <>
+      {
+        (urlQuery && urlQuery.length > 1)
+        ? <EmbededPost submission_id={urlQuery[1]}/>
+        : "Bad id, try http://localhost:3000/?id=ibj74o"
+      }
+    </>
+    
+  )
+}
+
+function App() {
+  return (
+    <Router>
+      <Switch>
+        <PageContent/>
+      </Switch>
+    </Router>
   );
 }
 
